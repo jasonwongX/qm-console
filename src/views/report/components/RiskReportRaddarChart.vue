@@ -6,7 +6,7 @@
 import echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 import { debounce } from '@/utils'
-import { getRiskScoreStatistics } from '@/api/monthOverview'
+import { getRiskScoreStatistics } from '@/api/riskScore'
 const animationDuration = 3000
 
 export default {
@@ -23,6 +23,10 @@ export default {
     height: {
       type: String,
       default: '360px'
+    },
+    month: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -31,6 +35,19 @@ export default {
       list: [],
       stander: [],
       max: 0
+    }
+  },
+  watch: {
+    month: {
+      handler() {
+        this.fetchData()
+        this.__resizeHandler = debounce(() => {
+          if (this.chart) {
+            this.chart.resize()
+          }
+        }, 100)
+        window.addEventListener('resize', this.__resizeHandler)
+      }
     }
   },
   mounted() {
@@ -52,7 +69,7 @@ export default {
   },
   methods: {
     fetchData() {
-      getRiskScoreStatistics().then(response => {
+      getRiskScoreStatistics(this.month).then(response => {
         const that = this
         this.list = response.data.actual_value
         this.stander = response.data.stander_value

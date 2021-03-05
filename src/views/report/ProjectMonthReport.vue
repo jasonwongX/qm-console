@@ -63,7 +63,7 @@
         <project-stage-bar-chart :month="month" />
       </el-col>
       <el-col :xs="24" :sm="6" :lg="6">
-        <risk-report-raddar-chart />
+        <risk-report-raddar-chart :month="month" />
       </el-col>
     </el-row>
     <el-row :gutter="24" class="data-content">
